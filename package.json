@@ -1,0 +1,24 @@
+{
+  "name": "Bamazon-Node.js-MySQL-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rizwanr/Bamazon-Node.js-MySQL-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rizwanr/Bamazon-Node.js-MySQL-project/issues"
+  },
+  "homepage": "https://github.com/rizwanr/Bamazon-Node.js-MySQL-project#readme",
+  "dependencies": {
+    "inquirer": "^6.5.1",
+    "mysql": "^2.17.1"
+  }
+}
