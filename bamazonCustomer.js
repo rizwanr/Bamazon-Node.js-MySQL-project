@@ -101,5 +101,3 @@ let showTotalPrice = (id, quantity) => {
 };
 
 displayProducts();
-
-//Once the update goes through, show the customer the total cost of their purchase.
