@@ -21,19 +21,19 @@ let listMenuOptions = () => {
     .then(answer => {
       switch (answer.menuOptions) {
         case 'View Products for Sale':
-          artistSearch();
+          viewProductsForSale();
           break;
 
         case 'View Low Inventory':
-          multiSearch();
+          viewLowInventory();
           break;
 
         case 'Add to Inventory':
-          rangeSearch();
+          addToInventory();
           break;
 
         case 'Add New Product':
-          songSearch();
+          addNewProduct();
           break;
 
         case 'exit':
@@ -41,6 +41,24 @@ let listMenuOptions = () => {
           break;
       }
     });
+};
+
+const viewProductsForSale = () => {
+  connection.query('Select * from products', (err, res) => {
+    if (err) return console.log('error in searching for the artist');
+    for (var i = 0; i < res.length; i++) {
+      console.log(
+        'Id: ' +
+          res[i].item_id +
+          ' || Product: ' +
+          res[i].product_name +
+          ' || Stock: ' +
+          res[i].stock_quantity +
+          ' || Prices: ' +
+          res[i].price
+      );
+    }
+  });
 };
 
 listMenuOptions();
