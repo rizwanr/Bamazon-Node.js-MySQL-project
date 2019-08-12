@@ -18,7 +18,6 @@ let connection = mysql.createConnection({
 
 connection.connect(err => {
   if (err) return console.log(error);
-  console.log('connected');
 });
 
 let product_id = [];
@@ -50,11 +49,8 @@ let promptUserForID = () => {
     })
     .then(answer => {
       id = parseInt(answer.id);
-      debugger;
+
       if (product_id.includes(id)) {
-        debugger;
-        console.log('fuck you');
-        console.log(product_id.includes(answer.id));
         promptUserForUnitOfProduct(id);
       }
     });
@@ -69,18 +65,15 @@ let promptUserForUnitOfProduct = id => {
     })
     .then(answer => {
       let quantity = parseInt(answer.unit);
-      console.log(quantity);
       connection.query(
         'SELECT stock_quantity FROM products where ?',
         { item_id: id },
         (err, res) => {
-          console.log(res);
-
           if (err)
             return console.log('error in getting stock of the provided id');
 
           let inStock = res[0].stock_quantity;
-          console.log(inStock);
+
           checkQuantityOfProduct(id, quantity, inStock);
         }
       );
@@ -90,7 +83,7 @@ let promptUserForUnitOfProduct = id => {
 let checkQuantityOfProduct = (id, quantity, inStock) => {
   if (quantity > inStock) return 'Insufficient quantity!';
   let remainingQuantity = inStock - quantity;
-  console.log(remainingQuantity);
+
   connection.query(
     'UPDATE products SET ? WHERE ?',
     [
@@ -104,6 +97,22 @@ let checkQuantityOfProduct = (id, quantity, inStock) => {
 
     (err, res) => {
       if (err) return console.log('Error.Unable to update the record');
+      showTotalPrice(id, quantity);
+    }
+  );
+};
+
+let showTotalPrice = (id, quantity) => {
+  connection.query(
+    'SELECT price FROM products where ?',
+    { item_id: id },
+    (err, res) => {
+      if (err) return console.log('error in getting price of the provided id');
+
+      let price = res[0].price;
+      let totalPrice = quantity * price;
+      console.log(`Total price of your product: ${totalPrice}`);
+      displayProducts();
     }
   );
 };
