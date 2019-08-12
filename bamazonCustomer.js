@@ -1,24 +1,8 @@
-let mysql = require('mysql');
 let inquirer = require('inquirer');
 
-// create the connection information for the sql database
-let connection = mysql.createConnection({
-  host: 'localhost',
+let connectToMYSQL = require('./connectMySQL.js');
 
-  // Your port; if not 3306
-  port: 3306,
-
-  // Your username
-  user: 'root',
-
-  // Your password
-  password: 'bol12345',
-  database: 'bamazon'
-});
-
-connection.connect(err => {
-  if (err) return console.log(error);
-});
+let connection = new connectToMYSQL();
 
 let product_id = [];
 
@@ -112,7 +96,6 @@ let showTotalPrice = (id, quantity) => {
       let price = res[0].price;
       let totalPrice = quantity * price;
       console.log(`Total price of your product: ${totalPrice}`);
-      displayProducts();
     }
   );
 };
