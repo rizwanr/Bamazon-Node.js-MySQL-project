@@ -4,6 +4,8 @@ let connectToMYSQL = require('./connectMySQL.js');
 
 let connection = new connectToMYSQL();
 
+let product_id = [];
+
 let listMenuOptions = () => {
   inquirer
     .prompt({
@@ -57,8 +59,8 @@ const viewProductsForSale = () => {
           ' || Prices: ' +
           res[i].price
       );
+      product_id.push(res[i].item_id);
     }
-    connection.end();
   });
 };
 
@@ -79,7 +81,52 @@ const viewLowInventory = () => {
             res[i].price
         );
       }
-      connection.end();
+    }
+  );
+};
+
+const addToInventory = () => {
+  viewProductsForSale();
+  inquirer
+    .prompt({
+      name: 'id',
+      type: 'input',
+      message: 'Please provide the ID of the item you would want add stock to:'
+    })
+    .then(answer => {
+      let id = parseInt(answer.id);
+
+      if (product_id.includes(id)) {
+        inquirer
+          .prompt({
+            name: 'addStock',
+            type: 'input',
+            message: 'Please provide the new stock:'
+          })
+          .then(answer => {
+            let stock = parseInt(answer.addStock);
+            updateWithNewStock(id, stock);
+            viewProductsForSale();
+          });
+      }
+    });
+};
+
+let updateWithNewStock = (id, stock) => {
+  connection.query(
+    'UPDATE products SET ? WHERE ?',
+    [
+      {
+        stock_quantity: stock
+      },
+      {
+        item_id: id
+      }
+    ],
+
+    (err, res) => {
+      if (err) return console.log('Error.Unable to update the record');
+      console.log(res);
     }
   );
 };

@@ -71,7 +71,7 @@ let checkQuantityOfProduct = (id, quantity, inStock) => {
   } else {
     let remainingQuantity = inStock - quantity;
 
-    connection.query(
+    var query = connection.query(
       'UPDATE products SET ? WHERE ?',
       [
         {
@@ -88,7 +88,6 @@ let checkQuantityOfProduct = (id, quantity, inStock) => {
       }
     );
   }
-  3;
 };
 
 let showTotalPrice = (id, quantity) => {
