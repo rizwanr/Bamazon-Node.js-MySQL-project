@@ -45,7 +45,7 @@ let listMenuOptions = () => {
 
 const viewProductsForSale = () => {
   connection.query('Select * from products', (err, res) => {
-    if (err) return console.log('error in searching for the artist');
+    if (err) return console.log('error in searching for the products');
     for (var i = 0; i < res.length; i++) {
       console.log(
         'Id: ' +
@@ -58,7 +58,30 @@ const viewProductsForSale = () => {
           res[i].price
       );
     }
+    connection.end();
   });
+};
+
+const viewLowInventory = () => {
+  connection.query(
+    'SELECT * from products where stock_quantity<5',
+    (err, res) => {
+      if (err) return console.log('error in searching for the stock');
+      for (var i = 0; i < res.length; i++) {
+        console.log(
+          'Id: ' +
+            res[i].item_id +
+            ' || Product: ' +
+            res[i].product_name +
+            ' || Stock: ' +
+            res[i].stock_quantity +
+            ' || Prices: ' +
+            res[i].price
+        );
+      }
+      connection.end();
+    }
+  );
 };
 
 listMenuOptions();
