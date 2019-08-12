@@ -65,25 +65,30 @@ let promptUserForUnitOfProduct = id => {
 };
 
 let checkQuantityOfProduct = (id, quantity, inStock) => {
-  if (quantity > inStock) return 'Insufficient quantity!';
-  let remainingQuantity = inStock - quantity;
+  if (quantity > inStock) {
+    console.log('Insufficient stock!');
+    promptUserToOrderAgain();
+  } else {
+    let remainingQuantity = inStock - quantity;
 
-  connection.query(
-    'UPDATE products SET ? WHERE ?',
-    [
-      {
-        stock_quantity: remainingQuantity
-      },
-      {
-        item_id: id
+    connection.query(
+      'UPDATE products SET ? WHERE ?',
+      [
+        {
+          stock_quantity: remainingQuantity
+        },
+        {
+          item_id: id
+        }
+      ],
+
+      (err, res) => {
+        if (err) return console.log('Error.Unable to update the record');
+        showTotalPrice(id, quantity);
       }
-    ],
-
-    (err, res) => {
-      if (err) return console.log('Error.Unable to update the record');
-      showTotalPrice(id, quantity);
-    }
-  );
+    );
+  }
+  3;
 };
 
 let showTotalPrice = (id, quantity) => {
@@ -100,4 +105,20 @@ let showTotalPrice = (id, quantity) => {
   );
 };
 
+let promptUserToOrderAgain = () => {
+  inquirer
+    .prompt({
+      name: 'orderAgain',
+      type: 'list',
+      message: 'Do you want to order again?',
+      choices: ['YES', 'NO']
+    })
+    .then(answer => {
+      if (answer.orderAgain === 'YES') {
+        displayProducts();
+      } else {
+        console.log('Thank you for ordering');
+      }
+    });
+};
 displayProducts();
