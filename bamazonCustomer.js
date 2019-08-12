@@ -1,8 +1,8 @@
-var mysql = require('mysql');
-var inquirer = require('inquirer');
+let mysql = require('mysql');
+let inquirer = require('inquirer');
 
 // create the connection information for the sql database
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
   host: 'localhost',
 
   // Your port; if not 3306
@@ -23,7 +23,7 @@ connection.connect(err => {
 
 let product_id = [];
 
-const displayProducts = () => {
+let displayProducts = () => {
   connection.query('Select * from products', (err, res) => {
     if (err) return console.log('error in searching for the artist');
     for (var i = 0; i < res.length; i++) {
@@ -36,13 +36,12 @@ const displayProducts = () => {
           res[i].price
       );
       product_id.push(res[i].item_id);
-      console.log(product_id);
     }
   });
   promptUserForID();
 };
 
-var promptUserForID = () => {
+let promptUserForID = () => {
   inquirer
     .prompt({
       name: 'id',
@@ -61,7 +60,7 @@ var promptUserForID = () => {
     });
 };
 
-var promptUserForUnitOfProduct = id => {
+let promptUserForUnitOfProduct = id => {
   inquirer
     .prompt({
       name: 'unit',
@@ -69,19 +68,46 @@ var promptUserForUnitOfProduct = id => {
       message: 'Please provide the quantity of item you want to purchase'
     })
     .then(answer => {
+      let quantity = parseInt(answer.unit);
+      console.log(quantity);
       connection.query(
         'SELECT stock_quantity FROM products where ?',
         { item_id: id },
         (err, res) => {
+          console.log(res);
+
           if (err)
             return console.log('error in getting stock of the provided id');
-          checkInStock();
-          console.log(res);
+
+          let inStock = res[0].stock_quantity;
+          console.log(inStock);
+          checkQuantityOfProduct(id, quantity, inStock);
         }
       );
     });
 };
 
-var checkInStock = () => {};
+let checkQuantityOfProduct = (id, quantity, inStock) => {
+  if (quantity > inStock) return 'Insufficient quantity!';
+  let remainingQuantity = inStock - quantity;
+  console.log(remainingQuantity);
+  connection.query(
+    'UPDATE products SET ? WHERE ?',
+    [
+      {
+        stock_quantity: remainingQuantity
+      },
+      {
+        item_id: id
+      }
+    ],
+
+    (err, res) => {
+      if (err) return console.log('Error.Unable to update the record');
+    }
+  );
+};
 
 displayProducts();
+
+//Once the update goes through, show the customer the total cost of their purchase.
