@@ -152,7 +152,7 @@ const addNewProduct = () => {
       {
         name: 'stock',
         type: 'input',
-        message: 'Please provide the name of the new product'
+        message: 'Please provide the stock'
       }
     ])
     .then(newProduct => {
@@ -162,7 +162,7 @@ const addNewProduct = () => {
 };
 
 const insertNewProduct = (name, department, price, stock) => {
-  var q = connection.query(
+  connection.query(
     'INSERT INTO products SET ?',
     {
       product_name: name,
