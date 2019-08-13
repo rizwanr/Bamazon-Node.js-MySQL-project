@@ -131,6 +131,49 @@ let updateWithNewStock = (id, stock) => {
   );
 };
 
-const addNewProduct = () => {};
+const addNewProduct = () => {
+  inquirer
+    .prompt([
+      {
+        name: 'name',
+        type: 'input',
+        message: 'Please provide the name of the new product'
+      },
+      {
+        name: 'department',
+        type: 'input',
+        message: 'Please provide the department name of the new product'
+      },
+      {
+        name: 'price',
+        type: 'input',
+        message: 'Please provide the price'
+      },
+      {
+        name: 'stock',
+        type: 'input',
+        message: 'Please provide the name of the new product'
+      }
+    ])
+    .then(newProduct => {
+      let { name, department, price, stock } = newProduct;
+      insertNewProduct(name, department, price, stock);
+    });
+};
+
+const insertNewProduct = (name, department, price, stock) => {
+  var q = connection.query(
+    'INSERT INTO products SET ?',
+    {
+      product_name: name,
+      department_name: department,
+      price: price,
+      stock_quantity: stock
+    },
+    (err, res) => {
+      console.log(`New product ${name} has been added to the stock`);
+    }
+  );
+};
 
 listMenuOptions();
