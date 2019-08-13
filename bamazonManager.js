@@ -11,7 +11,7 @@ let listMenuOptions = () => {
     .prompt({
       name: 'menuOptions',
       type: 'list',
-      message: 'Please select one from the menu options',
+      message: 'Please select one from the menu options\n',
       choices: [
         'View Products for Sale',
         'View Low Inventory',
@@ -47,7 +47,7 @@ let listMenuOptions = () => {
 
 const viewProductsForSale = () => {
   connection.query('Select * from products', (err, res) => {
-    if (err) return console.log('error in searching for the products');
+    if (err) return console.log('error in searching for the products\n');
     for (var i = 0; i < res.length; i++) {
       console.log(
         'Id: ' +
@@ -68,7 +68,7 @@ const viewLowInventory = () => {
   connection.query(
     'SELECT * from products where stock_quantity<5',
     (err, res) => {
-      if (err) return console.log('error in searching for the stock');
+      if (err) return console.log('error in searching for the stock\n');
       for (var i = 0; i < res.length; i++) {
         console.log(
           'Id: ' +
@@ -125,10 +125,12 @@ let updateWithNewStock = (id, stock) => {
     ],
 
     (err, res) => {
-      if (err) return console.log('Error.Unable to update the record');
+      if (err) return console.log('Error.Unable to update the record\n');
       console.log(res);
     }
   );
 };
+
+const addNewProduct = () => {};
 
 listMenuOptions();
