@@ -8,7 +8,7 @@ let product_id = [];
 
 let displayProducts = () => {
   connection.query('Select * from products', (err, res) => {
-    if (err) return console.log('error in searching for the artist');
+    if (err) return console.log('error in searching for the products');
     for (var i = 0; i < res.length; i++) {
       console.log(
         'Id: ' +
