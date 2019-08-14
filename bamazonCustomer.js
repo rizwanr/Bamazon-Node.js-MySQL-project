@@ -51,7 +51,9 @@ let promptUserForUnitOfProduct = id => {
       let quantity = parseInt(answer.unit);
       connection.query(
         'SELECT stock_quantity FROM products where ?',
-        { item_id: id },
+        {
+          item_id: id
+        },
         (err, res) => {
           if (err)
             return console.log('error in getting stock of the provided id');
@@ -84,6 +86,7 @@ let checkQuantityOfProduct = (id, quantity, inStock) => {
 
       (err, res) => {
         if (err) return console.log('Error.Unable to update the record');
+        addToProductSales(id, remainingQuantity);
         showTotalPrice(id, quantity);
       }
     );
@@ -93,13 +96,46 @@ let checkQuantityOfProduct = (id, quantity, inStock) => {
 let showTotalPrice = (id, quantity) => {
   connection.query(
     'SELECT price FROM products where ?',
-    { item_id: id },
+    {
+      item_id: id
+    },
     (err, res) => {
       if (err) return console.log('error in getting price of the provided id');
 
       let price = res[0].price;
       let totalPrice = quantity * price;
       console.log(`Total price of your product: ${totalPrice}`);
+    }
+  );
+};
+
+let addToProductSales = (id, remainingQuantity) => {
+  connection.query(
+    'select price from bamazon.products where ?',
+    {
+      item_id: id
+    },
+    (err, res) => {
+      if (err) return console.log('error in getting price of the provided id');
+      let price = res[0].price;
+      let productSales = remainingQuantity * price;
+
+      connection.query(
+        'UPDATE products SET ? WHERE ?',
+        [
+          {
+            product_sales: productSales
+          },
+          {
+            item_id: id
+          }
+        ],
+
+        (err, res) => {
+          if (err)
+            return console.log('Error.Unable to update the product_sales\n');
+        }
+      );
     }
   );
 };
