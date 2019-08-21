@@ -23,7 +23,7 @@ let listMenuOptions = () => {
           viewProductSalesByDepartment();
           break;
 
-        case 'Create New Department\n':
+        case 'Create New Department':
           createNewDepartment();
           break;
 
@@ -31,6 +31,39 @@ let listMenuOptions = () => {
           connection.end();
           break;
       }
+    });
+};
+
+const createNewDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: 'department_name',
+        type: 'input',
+        message: 'Please provide the name of the new department'
+      },
+      {
+        name: 'overhead_cost',
+        type: 'input',
+        message: 'Please provide the overhead cost'
+      }
+    ])
+    .then(answer => {
+      console.log(answer);
+      let department_name = answer.department_name;
+      let over_head_costs = answer.over_head_costs;
+      var q = connection.query(
+        'INSERT INTO departments SET ?',
+        {
+          department_name: department_name,
+          over_head_costs: over_head_costs
+        },
+        (err, res) => {
+          console.log(q);
+          if (err) return console.log('error in adding new department');
+          console.log(`New product has been added to the stock`);
+        }
+      );
     });
 };
 
@@ -51,8 +84,6 @@ const viewProductSalesByDepartment = () => {
           res[i].total_profit
         ]);
       }
-
-      console.log(data);
 
       console.table(
         [
